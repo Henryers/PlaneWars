@@ -293,7 +293,7 @@ class Manager(object):
             self.map.draw()
             # 绿色血条
             if self.players.sprites():
-                self.draw_hp_bar(100, 660, self.green, int(self.hp/2))
+                self.draw_hp_bar(100, 660, self.green, int(self.hp / 2))
             # 绘制文字hp
             self.show_hp()
             # 绘制得分
@@ -509,4 +509,3 @@ class Manager(object):
             # 刷新窗口内容
             pygame.display.update()
             time.sleep(0.02)
-

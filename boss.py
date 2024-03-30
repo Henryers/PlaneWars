@@ -91,7 +91,7 @@ class Boss2(myclass.Enemy):
         elif random_num <= 5 and self.rect.bottom >= 200 and not self.timer_flag:
             # 先打开定时器，输出一个激光          # 当前无激光绘制才能进行绘制，否则两个激光的不同定时器冲突
             pygame.time.set_timer(Manager.create_bullet_id, 200)
-            self.timer_flag = True   # 激光正在绘制
+            self.timer_flag = True  # 激光正在绘制
             # 开始画激光，在前60%的等待时间会画出
             Manager.is_await = True
         if self.is_fire:
@@ -119,9 +119,9 @@ class BossEnemyBullet1(myclass.EnemyBullet):
         # 修改子弹坐标
         self.rect.top += self.speed
         if self.random_direction == 0:
-            self.rect.left += 1    # 右下
+            self.rect.left += 1  # 右下
         else:
-            self.rect.left -= 1    # 左下
+            self.rect.left -= 1  # 左下
         # 如果子弹移出屏幕下方，则销毁子弹对象
         if self.rect.top > 700:
             self.kill()
@@ -268,7 +268,7 @@ class Manager(object):
 
     def show_laser(self):
         laser = pygame.image.load("./image/laser.png")
-        self.screen.blit(laser, (self.players.sprites()[0].rect.centerx-laser.get_rect().width/2, -25))
+        self.screen.blit(laser, (self.players.sprites()[0].rect.centerx - laser.get_rect().width / 2, -25))
 
     # warning警告条不断左移
     def show_warning_bg(self):
@@ -312,15 +312,15 @@ class Manager(object):
 
     def await_timer(self):
         Manager.await_time -= 1
-        if Manager.await_time == 4:   # 将激光图片从屏幕移除
+        if Manager.await_time == 4:  # 将激光图片从屏幕移除
             Manager.is_await = False
-        if Manager.await_time == 0:   # 定时器关了
+        if Manager.await_time == 0:  # 定时器关了
             pygame.time.set_timer(Manager.create_bullet_id, 0)
             # 只有敌机还活着，才能去规定里面的是否发射子弹等行为
             if self.enemies.sprites():
                 self.enemies.sprites()[0].timer_flag = False  # 标志定时器此时关闭，下一次激光可用available
-                self.enemies.sprites()[0].is_fire = True      # 启动，发射核弹！
-                Manager.await_time = 10                       # 重置await_time
+                self.enemies.sprites()[0].is_fire = True  # 启动，发射核弹！
+                Manager.await_time = 10  # 重置await_time
 
     def victory_timer(self):
         # 倒计时: 不断-1
@@ -437,10 +437,8 @@ class Manager(object):
                     if Manager.is_victory:
                         # 定时器触发的事件
                         self.victory_timer()
-                        print('成功事件定时器')
                     elif Manager.is_failure:
                         self.game_over_timer()
-                        print('失败事件定时器')
                     elif Manager.is_change:
                         self.change_timer()
                         print('形态切换定时器')
@@ -455,7 +453,6 @@ class Manager(object):
                 is_over = pygame.sprite.spritecollide(self.players.sprites()[0], Boss1.enemy_bullets, False)
                 if is_over:
                     # 判断与之碰撞的子弹类型，进行相应的血量扣除
-                    print(is_over[0].__class__)
                     if is_over[0].__class__ == BossEnemyBullet1:
                         self.hp -= 25
                     else:
@@ -479,7 +476,6 @@ class Manager(object):
                 is_over = pygame.sprite.spritecollide(self.players.sprites()[0], Boss2.enemy_bullets, True)
                 if is_over:
                     # 判断与之碰撞的子弹类型，进行相应的血量扣除
-                    print(is_over[0].__class__)
                     if is_over[0].__class__ == BossEnemyBullet3:
                         self.hp -= 35
                     elif is_over[0].__class__ == BossEnemyBullet4:
@@ -504,7 +500,7 @@ class Manager(object):
             # 判断玩家飞机和敌机的碰撞
             is_collide = pygame.sprite.groupcollide(self.players, self.enemies, False, False)
             if is_collide:
-                self.hp -= 10000   # 玩家飞机直接阵亡
+                self.hp -= 10000  # 玩家飞机直接阵亡
                 print('撞机')
                 if self.hp <= 0:
                     # hp显示为0而不是负数
@@ -524,20 +520,18 @@ class Manager(object):
 
             # 玩家子弹和所有敌机的碰撞判断
             is_enemy = pygame.sprite.groupcollide(myclass.Player.bullets, self.enemies, True, False)
-            if is_enemy and list(is_enemy.items())[0][1][0].rect.bottom == 200:   # boss下来后才解除无敌状态，玩家子弹才能生效
+            if is_enemy and list(is_enemy.items())[0][1][0].rect.bottom == 200:  # boss下来后才解除无敌状态，玩家子弹才能生效
                 items = list(is_enemy.items())[0]  # 获取第一个键值对: key:子弹  value:敌机列表
                 my_bullet = items[0]  # 获取击中boss的子弹
                 hit_enemy = items[1][0]  # 获取被击中的敌机对象
                 # 根据子弹类型，减少敌机生命值
-                print(hit_enemy.hp)
                 if my_bullet.__class__ == myclass.Bullet1:
                     hit_enemy.hp -= 1
                 elif my_bullet.__class__ == myclass.Bullet2:
                     hit_enemy.hp -= 3
-                elif my_bullet.__class__ == myclass.Bullet3LSlow or my_bullet.__class__ == myclass.Bullet3RSlow\
+                elif my_bullet.__class__ == myclass.Bullet3LSlow or my_bullet.__class__ == myclass.Bullet3RSlow \
                         or my_bullet.__class__ == myclass.Bullet3LFast or my_bullet.__class__ == myclass.Bullet3RFast:
                     hit_enemy.hp -= 2
-                print(hit_enemy.hp)
                 if hit_enemy.hp <= 0:
                     if hit_enemy.__class__ == Boss1:
                         # boss2音乐

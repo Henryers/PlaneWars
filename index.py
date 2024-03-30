@@ -62,15 +62,22 @@ class MusicBGM(object):
 
     def is_playing(self):
         return self.bgm_playing
+
+
 def main_endless():
     manager = endless.Manager()
     manager.main()
+
+
 def main_boss():
     manager = boss.Manager()
     manager.main()
+
+
 def main_histroy():
     manager = history.Manager()
     manager.main()
+
 
 music1 = MusicBGM()
 music1.playMyBGM()

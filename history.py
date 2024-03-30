@@ -6,7 +6,7 @@ from mysql_tool import MysqlTool
 
 pygame.init()
 
-
+# 返回键按钮类
 class Button:
     def __init__(self, image_path, position, action=None):
         self.image = pygame.image.load(image_path)
