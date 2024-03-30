@@ -13,7 +13,7 @@ class Boss1(myclass.Enemy):
 
     def __init__(self, screen):
         # 在子类的init初始化中，调用父类的构造函数，并传参进行初始化
-        super().__init__(screen, hp=24, speed=2, path="boss1.png", bg_size=(480, 700))
+        super().__init__(screen, hp=80, speed=2, path="boss1.png", bg_size=(480, 700))
         self.rect.midbottom = [240, 0]
 
     def auto_move(self):
@@ -53,7 +53,7 @@ class Boss2(myclass.Enemy):
 
     def __init__(self, screen):
         # 在子类的init初始化中，调用父类的构造函数，并传参进行初始化
-        super().__init__(screen, hp=48, speed=2, path="boss2.png", bg_size=(480, 700))
+        super().__init__(screen, hp=480, speed=2, path="boss2.png", bg_size=(480, 700))
         self.rect.midbottom = [240, 0]
         self.timer_flag = False
         self.is_fire = False
@@ -243,7 +243,7 @@ class Manager(object):
         # 初始化一个声音播放的对象
         self.sound = Music()
         # 飞机生命值
-        self.hp = 2800
+        self.hp = 4200
         self.red = (255, 0, 0)
         self.green = (0, 200, 0)
         self.white = (255, 255, 255)
@@ -265,6 +265,9 @@ class Manager(object):
 
     def show_hp(self):
         self.drawText('hp %d' % self.hp, 120, 660, textHeight=14, fontColor=(255, 255, 255))
+
+    def show_bosshp(self):
+        self.drawText('hp %d' % self.enemies.sprites()[0].hp, 120, 19, textHeight=14, fontColor=(255, 255, 255))
 
     def show_laser(self):
         laser = pygame.image.load("./image/laser.png")
@@ -405,7 +408,7 @@ class Manager(object):
             self.map.draw()
             # 绿色血条
             if self.players.sprites():
-                self.draw_hp_bar(100, 660, self.green, int(self.hp / 10))
+                self.draw_hp_bar(100, 660, self.green, int(self.hp / 15))
             # 绘制文字hp
             self.show_hp()
 
@@ -576,11 +579,15 @@ class Manager(object):
             self.supplies.update()
             # boss血条在最顶图层
             if self.enemies.sprites():
+                # boss1阶段绘制两条血条（红色 + 白色）
                 if self.enemies.sprites()[0].__class__ == Boss1:
                     self.draw_hp_bar(120, 20, self.red, 240)
-                    self.draw_hp_bar(120, 38, self.white, self.enemies.sprites()[0].hp * 10, 8)
+                    self.draw_hp_bar(120, 38, self.white, self.enemies.sprites()[0].hp * 3, 8)
+                # boss2阶段绘制红色血条
                 else:
-                    self.draw_hp_bar(120, 20, self.red, self.enemies.sprites()[0].hp * 5)
+                    self.draw_hp_bar(120, 20, self.red, self.enemies.sprites()[0].hp / 2)
+                self.show_bosshp()
+            # 没有赢时，始终显示boss的红色血条
             elif not Manager.is_victory:
                 self.draw_hp_bar(120, 20, self.red, 240)
 
